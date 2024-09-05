@@ -253,8 +253,9 @@
                                 >
                                     <img
                                         class="rounded-circle mt-1 o_portal_contact_img"
-                                        t-att-src="image_data_uri(ticket.user_id.avatar_1024)"
-                                        alt="Contact"
+                                        t-att-src="image_data_uri(ticket.user_id.avatar_128)"
+                                        alt="Agent"
+                                        width="50"
                                     />
                                 </div>
                                 <div class="col pl-md-0">
@@ -291,8 +292,9 @@
                                 >
                                     <img
                                         class="rounded-circle mt-1 o_portal_contact_img"
-                                        t-att-src="image_data_uri(ticket.partner_id.avatar_1024)"
+                                        t-att-src="image_data_uri(ticket.partner_id.avatar_128)"
                                         alt="Contact"
+                                        width="50"
                                     />
                                 </div>
                                 <div class="col pl-md-0">

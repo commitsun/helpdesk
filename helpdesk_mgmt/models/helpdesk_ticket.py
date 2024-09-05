@@ -7,9 +7,16 @@ class HelpdeskTicket(models.Model):
     _description = "Helpdesk Ticket"
     _rec_name = "number"
     _rec_names_search = ["number", "name"]
-    _order = "priority desc, sequence, number desc, id desc"
+    _order = "priority desc, write_date desc, sequence, number desc, id desc"
     _mail_post_access = "read"
-    _inherit = ["mail.thread.cc", "mail.activity.mixin", "portal.mixin"]
+    _inherit = [
+        "mail.thread.cc",
+        "mail.activity.mixin",
+        "portal.mixin",
+        "mail.tracking.duration.mixin",
+    ]
+    _primary_email = "partner_email"
+    _track_duration_field = "stage_id"
 
     @api.depends("team_id")
     def _compute_stage_id(self):
@@ -146,6 +153,10 @@ class HelpdeskTicket(models.Model):
                 vals["number"] = self._prepare_ticket_number(vals)
             if vals.get("user_id") and not vals.get("assigned_date"):
                 vals["assigned_date"] = fields.Datetime.now()
+            team_id = vals.get("team_id") or self.env.context.get("default_team_id")
+            if team_id:
+                team = self.env["helpdesk.ticket.team"].browse(team_id)
+                vals["stage_id"] = team._get_applicable_stages()[:1].id
         return super().create(vals_list)
 
     def copy(self, default=None):
